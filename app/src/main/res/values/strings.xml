@@ -1,6 +1,9 @@
 <resources>
-    <string name="app_name">PostQueryApp</string>
-    <string name="title_home">Home</string>
+    <string name="app_name">快递查询</string>
+    <string name="title_home">欢迎来到-快递查询App</string>
+    <string name="search">查询快递</string>
+    <string name="mine">我的界面</string>
+    <string name="input_please">请输入快递单号</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
 </resources>
