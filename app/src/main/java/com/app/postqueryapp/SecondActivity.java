@@ -2,6 +2,7 @@ package com.app.postqueryapp;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,11 @@ public class SecondActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     // 调用父类方法，并启动主活动（活动要在AndroidManifest.xml里注册）
         setContentView(R.layout.activity_second);
+
+        ActionBar actionBar = getSupportActionBar();    // 获取系统自带的标题栏并隐藏，因为要使用自己定制的标题栏
+        if(actionBar != null){
+            actionBar.hide();
+        }
 
         /** 定义一个 按钮， 并设置监听事件， 获得主活动传递的url */
         Button buttonSecond = (Button) findViewById(R.id.button_second_one);

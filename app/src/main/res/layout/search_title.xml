@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#02584d"
+    >
+
+    <TextView
+        android:id="@+id/title_back_search"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:layout_margin="5dp"
+        android:textStyle="bold"
+        android:text="@string/a"
+        android:textColor="#ffffff"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/title_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:text="@string/searchTile"
+        android:fontFamily="微软雅黑"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/title_null"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+
+
+</LinearLayout>

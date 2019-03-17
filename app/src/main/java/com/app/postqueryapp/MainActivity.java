@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -48,13 +49,18 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);     // 调用父类方法，并启动主活动（活动要在AndroidManifest.xml里注册）
         setContentView(R.layout.activity_main);
 
+        ActionBar actionBar = getSupportActionBar();    // 获取系统自带的标题栏并隐藏，因为要使用自己定制的标题栏
+        if(actionBar != null){
+            actionBar.hide();
+        }
+
         mTextMessage = (TextView) findViewById(R.id.message);      // 赋予全局变量 mTextMessage 值为一开始菜单界面的text
 
 //        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);     // 定义一个 底部导航 变量
 //        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);      // 传入一个 菜单选择监听器
 
         /** 定义一个 按钮， 并设置监听事件 */
-        Button button = (Button) findViewById(R.id.button);
+        Button button = (Button) findViewById(R.id.button_mine);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +78,16 @@ public class MainActivity extends BaseActivity {
                 String url = "http://baidu.com";        // 定义一个字符串， 向下一个活动传参时用到
                 intent.putExtra("urldd",url);       // 将url字符串放入intent里， 传参时使用
                 startActivityForResult(intent, 1);      // 开启下一个活动（ForResult是想要下一个活动销毁时返回一个参数，下面重写一方法获得下一个活动返回的参数）
+            }
+        });
+
+        Button buttonSearch = (Button) findViewById(R.id.button_search);
+        buttonSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 显式活动
+                Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
+                startActivity(intent);
             }
         });
     }

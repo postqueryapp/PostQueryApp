@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="Account"></dbname>
+    <version value="1"></version>
+
+    <list>
+        <mapping class="com.app.postqueryapp.dto.Account"></mapping>
+    </list>
+</litepal>

@@ -4,14 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/mine"
     tools:context=".SecondActivity">
+
+    <com.app.postqueryapp.mineLayout.TitleLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints"/>
 
     <Button
         android:id="@+id/button_second_one"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
-        android:text="百度一下"
+        android:text="@string/login"
+        tools:ignore="MissingConstraints"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Button
+        android:id="@+id/button_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:text="@string/address"
         tools:ignore="MissingConstraints"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,8 +38,8 @@
         android:id="@+id/button_pre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
-        android:text="返回"
+        android:layout_marginTop="400dp"
+        android:text="@string/setting"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
