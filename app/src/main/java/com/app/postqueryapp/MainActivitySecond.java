@@ -20,8 +20,8 @@ import java.util.List;
 public class MainActivitySecond extends BaseActivity implements View.OnClickListener {
     private List<Fragment> fragments = new ArrayList<Fragment>();
     private ViewPager viewPager;
-    private LinearLayout searchLayout, indexLayout, mineLayout;
-    private TextView search, index, mine, tvCurrent;
+    private LinearLayout searchLayout, mineLayout;
+    private TextView search, mine, tvCurrent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +43,16 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
         viewPager = (ViewPager) findViewById(R.id.viewPager);
 
         searchLayout = (LinearLayout) findViewById(R.id.search_layout);
-        indexLayout = (LinearLayout) findViewById(R.id.index_layout);
         mineLayout = (LinearLayout) findViewById(R.id.mine_layout);
 
-        indexLayout.setOnClickListener(this);
         searchLayout.setOnClickListener(this);
         mineLayout.setOnClickListener(this);
 
         search = (TextView) findViewById(R.id.search_post);
-        index = (TextView) findViewById(R.id.index);
         mine = (TextView) findViewById(R.id.mine);
 
-        index.setSelected(true);
-        tvCurrent = index;
+        search.setSelected(true);
+        tvCurrent = search;
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -78,14 +75,12 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
     }
 
     private void initData() {
-        Fragment indexFragment = new IndexFragment();
         Fragment searchFragment = new SearchFragment();
         Fragment mineFragment = new MineFragment();
 
         TextView changeTitle = findViewById(R.id.title);
-        changeTitle.setText("首页");
+        changeTitle.setText("查询快递");
 
-        fragments.add(indexFragment);
         fragments.add(searchFragment);
         fragments.add(mineFragment);
 
@@ -104,19 +99,10 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
         tvCurrent.setSelected(false);
         switch (id) {
             case
-                R.id.index_layout:
-                changeTitle.setText("首页");
-                viewPager.setCurrentItem(0);
-            case 0:
-                changeTitle.setText("首页");
-                index.setSelected(true);
-                tvCurrent = index;
-                break;
-            case
                 R.id.search_layout:
                 changeTitle.setText("查询快递");
-                viewPager.setCurrentItem(1);
-            case 1:
+                viewPager.setCurrentItem(0);
+            case 0:
                 changeTitle.setText("查询快递");
                 search.setSelected(true);
                 tvCurrent = search;
@@ -124,8 +110,8 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
             case
                 R.id.mine_layout:
                 changeTitle.setText("我的中心");
-                viewPager.setCurrentItem(2);
-            case 2:
+                viewPager.setCurrentItem(1);
+            case 1:
                 changeTitle.setText("我的中心");
                 mine.setSelected(true);
                 tvCurrent = mine;

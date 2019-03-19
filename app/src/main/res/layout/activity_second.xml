@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/mine"
+    android:background="#F0F8FF"
     tools:context=".SecondActivity">
-
 
     <LinearLayout
         android:layout_width="match_parent"

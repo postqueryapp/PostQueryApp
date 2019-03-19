@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ThirdActivity"
-    android:background="@mipmap/search"
+    android:background="#F0F8FF"
     >
-
 
     <EditText
         android:layout_width="match_parent"

@@ -49,9 +49,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+    private static final String[] DUMMY_CREDENTIALS = new String[100];
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -93,6 +91,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+//                for(int index = 0; index<DUMMY_CREDENTIALS.length; index++){
+//                    DUMMY_CREDENTIALS[index] = null;
+//                }
+
                 try{
                     List<Account> accountList = DataSupport.findAll(Account.class);
                     if(accountList.size() == 0){
@@ -101,7 +103,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     else {
                         for(int index = 0; index<accountList.size(); index++){
                             DUMMY_CREDENTIALS[index] = accountList.get(index).getAuthor() + ":" + accountList.get(index).getPassWord();
-                            System.out.println(DUMMY_CREDENTIALS[index]);
+                            System.out.println(accountList.size());
+                            System.out.println(accountList.get(index).getId() + "a" + accountList.get(index).getAuthor() + "p" + accountList.get(index).getPassWord());
                         }
                     }
                 }catch (Exception e){
@@ -126,7 +129,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 View focusView = null;
 
                 // Check for a valid password, if the user entered one.
-                if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+                if (password.contains(":")) {
+                    mPasswordView.setError("密码中不能包含字符:");
+                    focusView = mPasswordView;
+                    cancel = true;
+                }
+
+                if (!isPasswordValid(password)) {
                     mPasswordView.setError(getString(R.string.error_invalid_password));
                     focusView = mPasswordView;
                     cancel = true;
@@ -142,12 +151,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     focusView = mEmailView;
                     cancel = true;
                 }
+                else if(email.contains(":")){
+                    mEmailView.setError("密码中不能包含字符");
+                    focusView = mEmailView;
+                    cancel = true;
+                }
 
-                Account account = new Account();
-                account.setAuthor(email);
-                account.setPassWord(password);
                 List<Account> accountList = DataSupport.findAll(Account.class);
-
                 for(Account data:accountList){
                     if(data.getAuthor().equals(email)){
                         mEmailView.setError("该用户名已存在");
@@ -155,10 +165,14 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         cancel = true;
                     }
                 }
+
                 if(cancel){
                     focusView.requestFocus();
                 }
                 else{
+                    Account account = new Account();
+                    account.setAuthor(email);
+                    account.setPassWord(password);
                     account.save();
                     // 弹出消息
                     Toast.makeText(LoginActivity.this, "您已注册成功", Toast.LENGTH_SHORT).show();
