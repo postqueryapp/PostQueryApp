@@ -8,15 +8,12 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -30,10 +27,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.app.postqueryapp.dto.Account;
+import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
-
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -94,6 +93,21 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                try{
+                    List<Account> accountList = DataSupport.findAll(Account.class);
+                    if(accountList.size() == 0){
+                        System.out.println("accountList为空");
+                    }
+                    else {
+                        for(int index = 0; index<accountList.size(); index++){
+                            DUMMY_CREDENTIALS[index] = accountList.get(index).getAuthor() + ":" + accountList.get(index).getPassWord();
+                            System.out.println(DUMMY_CREDENTIALS[index]);
+                        }
+                    }
+                }catch (Exception e){
+                    System.out.println("登录出错");
+                }
+
                 attemptLogin();
             }
         });
@@ -104,8 +118,51 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             public void onClick(View view) {
                 String email = mEmailView.getText().toString();
                 String password = mPasswordView.getText().toString();
-                String accountAndPassword = email + ":" + password;
-                DUMMY_CREDENTIALS[0] = accountAndPassword;
+
+                mEmailView.setError(null);
+                mPasswordView.setError(null);
+
+                boolean cancel = false;
+                View focusView = null;
+
+                // Check for a valid password, if the user entered one.
+                if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+                    mPasswordView.setError(getString(R.string.error_invalid_password));
+                    focusView = mPasswordView;
+                    cancel = true;
+                }
+
+                // Check for a valid email address.
+                if (TextUtils.isEmpty(email)) {
+                    mEmailView.setError("请填写");
+                    focusView = mEmailView;
+                    cancel = true;
+                } else if (!isEmailValid(email)) {
+                    mEmailView.setError("用户名应不小于6位");
+                    focusView = mEmailView;
+                    cancel = true;
+                }
+
+                Account account = new Account();
+                account.setAuthor(email);
+                account.setPassWord(password);
+                List<Account> accountList = DataSupport.findAll(Account.class);
+
+                for(Account data:accountList){
+                    if(data.getAuthor().equals(email)){
+                        mEmailView.setError("该用户名已存在");
+                        focusView = mEmailView;
+                        cancel = true;
+                    }
+                }
+                if(cancel){
+                    focusView.requestFocus();
+                }
+                else{
+                    account.save();
+                    // 弹出消息
+                    Toast.makeText(LoginActivity.this, "您已注册成功", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -211,12 +268,12 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        return email.length() > 5;
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 5;
     }
 
     /**
@@ -354,7 +411,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             if (success) {
 
 //                 显式活动
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivitySecond.class);
                 startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_login));

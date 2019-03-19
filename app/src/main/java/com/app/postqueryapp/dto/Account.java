@@ -1,6 +1,8 @@
 package com.app.postqueryapp.dto;
 
-public class Account {
+import org.litepal.crud.DataSupport;
+
+public class Account extends DataSupport {
     /**
      * 用户id
      */

@@ -39,4 +39,13 @@ public class ActivityController {
         }
         activityList.clear();
     }
+
+    /**
+     * 退出登录，销毁活动，只剩一个登录界面活动
+     */
+    public static void outSign(){
+        while(activityList.size() > 1){
+            activityList.remove(activityList.size() - 1);
+        }
+    }
 }

@@ -59,27 +59,27 @@ public class MainActivity extends BaseActivity {
 //        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);     // 定义一个 底部导航 变量
 //        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);      // 传入一个 菜单选择监听器
 
-        /** 定义一个 按钮， 并设置监听事件 */
-        Button button = (Button) findViewById(R.id.button_mine);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 弹出消息
-//                Toast.makeText(MainActivity.this, "You clicked Button", Toast.LENGTH_SHORT).show();
-
-                // 显式活动
-//                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-
-                Intent intent = new Intent("com.example.activitytest.ACTION_START");        // 隐式活动， 此活动在AndroidManifest.xml里用action注册了
-
-                // 自我添加的隐式活动类型
-//                intent.addCategory("com.example.activitytest.MY_CATEGORY");
-
-                String url = "http://baidu.com";        // 定义一个字符串， 向下一个活动传参时用到
-                intent.putExtra("urldd",url);       // 将url字符串放入intent里， 传参时使用
-                startActivityForResult(intent, 1);      // 开启下一个活动（ForResult是想要下一个活动销毁时返回一个参数，下面重写一方法获得下一个活动返回的参数）
-            }
-        });
+//        /** 定义一个 按钮， 并设置监听事件 */
+//        Button button = (Button) findViewById(R.id.button_mine);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // 弹出消息
+////                Toast.makeText(MainActivity.this, "You clicked Button", Toast.LENGTH_SHORT).show();
+//
+//                // 显式活动
+////                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+//
+//                Intent intent = new Intent("com.example.activitytest.ACTION_START");        // 隐式活动， 此活动在AndroidManifest.xml里用action注册了
+//
+//                // 自我添加的隐式活动类型
+////                intent.addCategory("com.example.activitytest.MY_CATEGORY");
+//
+//                String url = "http://baidu.com";        // 定义一个字符串， 向下一个活动传参时用到
+//                intent.putExtra("urldd",url);       // 将url字符串放入intent里， 传参时使用
+//                startActivityForResult(intent, 1);      // 开启下一个活动（ForResult是想要下一个活动销毁时返回一个参数，下面重写一方法获得下一个活动返回的参数）
+//            }
+//        });
 
         Button buttonSearch = (Button) findViewById(R.id.button_search);
         buttonSearch.setOnClickListener(new View.OnClickListener() {
