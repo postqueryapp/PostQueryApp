@@ -56,6 +56,7 @@ public class MainActivity extends BaseActivity {
 
         mTextMessage = (TextView) findViewById(R.id.message);      // 赋予全局变量 mTextMessage 值为一开始菜单界面的text
 
+
 //        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);     // 定义一个 底部导航 变量
 //        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);      // 传入一个 菜单选择监听器
 

@@ -25,6 +25,7 @@ public class SecondActivity extends BaseActivity {
             actionBar.hide();
         }
 
+
 //        /** 定义一个 按钮， 并设置监听事件， 获得主活动传递的url */
 //        Button buttonSecond = (Button) findViewById(R.id.button_second_one);
 //        buttonSecond.setOnClickListener(new View.OnClickListener() {

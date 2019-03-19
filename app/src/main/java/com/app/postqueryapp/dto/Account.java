@@ -41,4 +41,5 @@ public class Account extends DataSupport {
     public void setPassWord(String passWord) {
         this.passWord = passWord;
     }
+
 }

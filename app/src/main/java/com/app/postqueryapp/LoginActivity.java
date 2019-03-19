@@ -425,5 +425,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             showProgress(false);
         }
     }
+
 }
 

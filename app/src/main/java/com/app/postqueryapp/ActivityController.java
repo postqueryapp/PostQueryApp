@@ -41,7 +41,7 @@ public class ActivityController {
     }
 
     /**
-     * 退出登录，销毁活动，只剩一个登录界面活动
+     * 退出登录，销毁活动，只剩一个登录界面
      */
     public static void outSign(){
         while(activityList.size() > 1){

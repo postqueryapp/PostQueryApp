@@ -96,16 +96,6 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-//        TextView changeTitle = findViewById(R.id.title);
-//        if(tvCurrent.equals(search)){
-//            changeTitle.setText("查询快递");
-//        }
-//        else if(tvCurrent.equals(index)){
-//            changeTitle.setText("首页");
-//        }
-//        else{
-//            changeTitle.setText("我的中心");
-//        }
         changeTab(v.getId());
     }
 

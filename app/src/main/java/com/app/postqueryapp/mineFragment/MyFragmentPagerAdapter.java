@@ -26,4 +26,5 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
         // TODO Auto-generated method stub
         return mFragments.size();
     }
+
 }
