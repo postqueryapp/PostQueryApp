@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <!--主界面标题栏， 代码中根据界面改变而改变-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -22,6 +23,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <!--定义ViewPager， 用于制作底部导航栏 和 碎片滑动效果-->
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
@@ -29,6 +31,7 @@
         android:layout_weight="1" >
     </android.support.v4.view.ViewPager>
 
+    <!--底部导航栏， 其中定义了两个文字按钮-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"

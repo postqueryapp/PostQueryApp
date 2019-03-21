@@ -10,6 +10,9 @@ import android.widget.Button;
 import com.app.postqueryapp.ActivityController;
 import com.app.postqueryapp.R;
 
+/**
+ * 我的中心界面 碎片
+ */
 public class MineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){

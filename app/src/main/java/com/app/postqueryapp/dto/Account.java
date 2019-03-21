@@ -2,6 +2,9 @@ package com.app.postqueryapp.dto;
 
 import org.litepal.crud.DataSupport;
 
+/**
+ * 账户信息， 注册和登录所用
+ */
 public class Account extends DataSupport {
     /**
      * 用户id

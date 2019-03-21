@@ -9,7 +9,6 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.app.postqueryapp.mineFragment.IndexFragment;
 import com.app.postqueryapp.mineFragment.MineFragment;
 import com.app.postqueryapp.mineFragment.MyFragmentPagerAdapter;
 import com.app.postqueryapp.mineFragment.SearchFragment;
@@ -17,10 +16,17 @@ import com.app.postqueryapp.mineFragment.SearchFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 底部导航滑动控件（主界面的左右滑动）
+ */
 public class MainActivitySecond extends BaseActivity implements View.OnClickListener {
+    // 碎片list
     private List<Fragment> fragments = new ArrayList<Fragment>();
+    // 翻页效果视图
     private ViewPager viewPager;
+    // 查询界面布局 和 我的中心界面布局
     private LinearLayout searchLayout, mineLayout;
+    // 查询物流文字 和 我的中心文字 和 当前碎片
     private TextView search, mine, tvCurrent;
 
     @Override
@@ -34,8 +40,10 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
             actionBar.hide();
         }
 
+        // 初始化布局
         initView();
 
+        // 初始化碎片界面
         initData();
     }
 
@@ -89,6 +97,10 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
         viewPager.setAdapter(adapter);
     }
 
+    /**
+     * 切换碎片页面的方法
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         changeTab(v.getId());

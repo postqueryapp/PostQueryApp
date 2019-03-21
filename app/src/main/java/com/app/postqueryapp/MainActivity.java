@@ -2,42 +2,43 @@ package com.app.postqueryapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.app.postqueryapp.adapter.QueryAdapter;
+import com.app.postqueryapp.api.KdniaoTrackQueryAPI;
+import com.app.postqueryapp.dto.QueryInformation;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
     /** 主屏幕显示的 文字 变量 */
-    private TextView mTextMessage;
+    private List<QueryInformation> informationList = new ArrayList<>();
 
-//    /** 定义一个 底部菜单 选择监听器 */
-//    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-//            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-//
-//        @Override
-//        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//            switch (item.getItemId()) {
-//                case R.id.navigation_home:
-//                    mTextMessage.setText(R.string.title_home);
-//                    return true;
-//                case R.id.navigation_dashboard:
-//                    mTextMessage.setText(R.string.title_dashboard);
-//                    return true;
-//                case R.id.navigation_notifications:
-//                    mTextMessage.setText(R.string.title_notifications);
-//                    return true;
-//            }
-//            return false;
-//        }
-//    };
+    private List<QueryInformation> inforHandles = new ArrayList<>();
+
+    QueryAdapter adapter = null;
+
+    RecyclerView recyclerView = null;
+
+    private Runnable runnable = null;
+
+    private String result = null;
+
+    private Handler handler= null;
+
+
 
     /**
      * 主活动初始化类（生命周期类）用于加载布局、绑定事件
@@ -54,43 +55,93 @@ public class MainActivity extends BaseActivity {
             actionBar.hide();
         }
 
-        mTextMessage = (TextView) findViewById(R.id.message);      // 赋予全局变量 mTextMessage 值为一开始菜单界面的text
+        // 获得滑动控件视图
+        recyclerView = findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
 
-
-//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);     // 定义一个 底部导航 变量
-//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);      // 传入一个 菜单选择监听器
-
-//        /** 定义一个 按钮， 并设置监听事件 */
-//        Button button = (Button) findViewById(R.id.button_mine);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // 弹出消息
-////                Toast.makeText(MainActivity.this, "You clicked Button", Toast.LENGTH_SHORT).show();
-//
-//                // 显式活动
-////                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-//
-//                Intent intent = new Intent("com.example.activitytest.ACTION_START");        // 隐式活动， 此活动在AndroidManifest.xml里用action注册了
-//
-//                // 自我添加的隐式活动类型
-////                intent.addCategory("com.example.activitytest.MY_CATEGORY");
-//
-//                String url = "http://baidu.com";        // 定义一个字符串， 向下一个活动传参时用到
-//                intent.putExtra("urldd",url);       // 将url字符串放入intent里， 传参时使用
-//                startActivityForResult(intent, 1);      // 开启下一个活动（ForResult是想要下一个活动销毁时返回一个参数，下面重写一方法获得下一个活动返回的参数）
-//            }
-//        });
-
-        Button buttonSearch = (Button) findViewById(R.id.button_search);
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
+        /**
+         * 在handlerMessage()方法里，取到线程通信队列MessageQueue里的信息， 复原成ArrayList传入滑动控件适配器
+         */
+        handler = new Handler(){
             @Override
-            public void onClick(View v) {
-                // 显式活动
-                Intent intent = new Intent(MainActivity.this, ThirdActivity.class);
-                startActivity(intent);
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Bundle data = msg.getData();
+                ArrayList<String> infos = new ArrayList<>();
+                infos = data.getStringArrayList("info");
+                for(int i =0; i<infos.size(); i++){
+                    QueryInformation information = new QueryInformation();
+                    information.setInfo(infos.get(i));
+                    i++;
+                    information.setTime(infos.get(i));
+                    inforHandles.add(information);
+                }
+                Log.i("mylog","请求结果-->" + infos.toString());
+                adapter = new QueryAdapter(inforHandles);
+                recyclerView.setAdapter(adapter);
             }
-        });
+        };
+
+        /**
+         * 多线程接口， 实现多线程
+         */
+        runnable = new Runnable(){
+            @Override
+            public void run(){
+
+                try{
+                    // 下面一大排代码，是从api获得数据， 然后剪切数据为QueryInfomation, 传入ArryList里
+                    KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
+                    String selectCode = getIntent().getStringExtra("selectCode");
+                    String selectNumber = getIntent().getStringExtra("selectNumber");
+                    Thread.sleep(1000);
+                    result = api.getQueryInformation(selectCode, selectNumber);
+                    String state = jxJson("state", result);
+                    result = jxJson("Traces", result);
+                    int acceptStation = 0;
+                    int acceptTime = 0;
+                    acceptStation = result.indexOf("\"AcceptStation\":\"", acceptStation) + 17;
+                    acceptTime = result.indexOf("\",\"AcceptTime\"", acceptStation);
+                    for(;!(acceptStation == -1 && acceptTime == -1);){
+                        QueryInformation info = new QueryInformation();
+
+                        info.setInfo(result.substring(acceptStation, acceptTime));
+                        acceptStation = result.indexOf("\"},{\"AcceptStation\":\"", acceptTime);
+                        if(acceptStation == -1){
+                            info.setTime(result.substring(acceptTime, acceptTime + 20));
+                            break;
+                        }
+                        acceptTime += 16;
+                        info.setTime(result.substring(acceptTime, acceptStation));
+                        acceptTime = result.indexOf("\",\"AcceptTime\":\"", acceptStation);
+                        acceptStation += 21;
+                        informationList.add(info);
+                    }
+                    if(informationList.size() != 0){
+                        informationList.get(0).setStatus(state);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                // 设置bundle用于设置复杂数据， 然后传入线程通信队列MessageQueue里
+                Bundle bundle = new Bundle();
+                ArrayList<String> infos = new ArrayList<>();
+                // 将从api获取并截取到的QueryInformation类，传入到StringList里， 便于设置bundle后，设置Message的data
+                for(QueryInformation data:informationList){
+                    infos.add(data.getInfo());
+                    infos.add(data.getTime());
+                }
+                bundle.putStringArrayList("info", infos);
+                Message msg = Message.obtain();
+                msg.setData(bundle);
+                // 这里是向线程通信队列MessageQueue 发送Message
+                handler.sendMessage(msg);
+            }
+        };
+        new Thread(runnable).start();
     }
 
     /**
@@ -112,6 +163,36 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 截取JSON字符串中的某个属性的整个字符串 的工具方法
+     * @param mkey
+     * @param strJson
+     * @return
+     */
+    public String jxJson(String mkey, String strJson) {
+        String value = "";
+        try {
+            JSONObject json = new JSONObject(strJson);
+            Iterator iterator = json.keys();
+            while (iterator.hasNext()) {
+                String key = iterator.next() + "";
 
-
+                if (json.getString(key).startsWith("{")) {
+                    value = jxJson(mkey, json.getString(key));
+                    break;
+                } else {
+                    if (key.equals(mkey)) {
+                        value = json.getString(key);
+                        break;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (value.equals("null")) {
+            value = "";
+        }
+        return value;
+    }
 }

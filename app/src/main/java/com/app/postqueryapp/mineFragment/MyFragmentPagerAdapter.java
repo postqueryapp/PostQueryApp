@@ -6,6 +6,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
+/**
+ * 整体滑动界面的 碎片适配器
+ */
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> mFragments;
 

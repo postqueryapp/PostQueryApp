@@ -5,8 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F8FF"
-    tools:context=".SecondActivity">
+    >
 
+    <!--退出登录按钮-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,6 +25,7 @@
             />
     </LinearLayout>
 
+    <!--地址管理按钮-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,6 +43,7 @@
             />
     </LinearLayout>
 
+    <!--设置按钮-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,6 +60,7 @@
             tools:ignore="MissingConstraints" />
     </LinearLayout>
 
+    <!--退出按钮-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

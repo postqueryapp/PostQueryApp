@@ -36,7 +36,7 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers login via email/password.
+ * 登录活动，用于本地注册账号 和 检验账号、密码
  */
 public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
@@ -87,14 +87,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             }
         });
 
+        /**
+         * 登录按钮事件，主要是从sqlLite数据库取出所注册的所有的account信息，检测是否匹配
+         */
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-//                for(int index = 0; index<DUMMY_CREDENTIALS.length; index++){
-//                    DUMMY_CREDENTIALS[index] = null;
-//                }
-
                 try{
                     List<Account> accountList = DataSupport.findAll(Account.class);
                     if(accountList.size() == 0){
@@ -115,6 +114,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             }
         });
 
+        /**
+         * 注册账号按钮，获取用户和密码，设置Account类存入sqlLite数据库，同时校验数据的可靠性
+         */
         Button mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
         mEmailSignUpButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -253,6 +255,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
+            cancel = true;
+        }
+
+        if(DUMMY_CREDENTIALS[0] == null){
+            // 弹出消息
+            Toast.makeText(LoginActivity.this, "请您先注册", Toast.LENGTH_SHORT).show();
+            focusView = mEmailView;
             cancel = true;
         }
 
