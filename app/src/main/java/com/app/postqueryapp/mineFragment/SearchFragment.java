@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,12 @@ public class SearchFragment extends Fragment {
         searchView = view;
         // 所填快递单号
         selectNumber = view.findViewById(R.id.input);
+
+        //监听back必须设置的
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        //然后在写这个监听器
+        view.setOnKeyListener(backlistener);
 
         /**
          * 查询按钮 监听事件
@@ -154,7 +161,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void initDatas() {
-        //========================================初始化爱好列表集合========================================
+        //========================================初始化快递公司列表集合========================================
         mHobbyList = new ArrayList<SpinnearBean>();
         mHobbyNameList = new ArrayList<String>();
 
@@ -191,7 +198,7 @@ public class SearchFragment extends Fragment {
             }
         })
 //                .setDecorView((RelativeLayout)searchView.findViewById(R.id.activity_rootview))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
-                .setTitleText("选择爱好")//标题文字
+                .setTitleText("选择快递公司")//标题文字
                 .setTitleSize(20)//标题文字大小
                 .setTitleColor(getResources().getColor(R.color.pickerview_title_text_color))//标题文字颜色
                 .setCancelText("取消")//取消按钮文字
@@ -209,7 +216,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void initEvents() {
-        //选择爱好的下拉菜单点击事件
+        //选择快递公司的下拉菜单点击事件
         hobbyTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,5 +284,19 @@ public class SearchFragment extends Fragment {
         return content;
     }
 
+
+    private View.OnKeyListener backlistener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View view, int i, KeyEvent keyEvent) {
+            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                //这边判断,如果是back的按键被点击了   就自己拦截实现掉
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    Toast.makeText(searchView.getContext(), "BACK拦截", Toast.LENGTH_SHORT).show();
+                    return true;//表示处理了
+                }
+            }
+            return false;
+        }
+    };
 
 }
