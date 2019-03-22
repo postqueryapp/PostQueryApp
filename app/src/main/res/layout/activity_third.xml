@@ -1,71 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F8FF"
-    >
-
+    tools:context=".MainActivity">
 
     <!--输入快递单号-->
     <EditText
         android:id="@+id/input"
-        android:layout_width="match_parent"
+        android:layout_width="291dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
+        android:layout_marginBottom="8dp"
+        android:background="#ffffff"
         android:hint="@string/input_please"
-        android:maxLines="1"
+        android:textAllCaps="false"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"/>
-
-    <!--选择快递公司-->
-    <EditText
-        android:id="@+id/select"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="350dp"
-        android:hint="请选择快递公司"
-        android:maxLines="1"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"/>
+        app:layout_constraintVertical_bias="0.356"
+        tools:ignore="MissingConstraints" />
 
     <!--选择快递公司按钮-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/button_select"
-            android:layout_height="wrap_content"
-            android:layout_width="180dp"
-            android:layout_marginTop="390dp"
-            android:layout_gravity="center"
-            android:text="选择快递公司"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints"
-            />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/hobbyTv"
+        android:layout_width="293dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="20dp"
+        android:background="#ffffff"
+        android:drawableRight="@drawable/pickerview_jiantou"
+        android:text="请选择物流公司"
+        android:textSize="24sp"
+        app:layout_constraintHorizontal_bias="0.458"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input"
+        tools:ignore="MissingConstraints" />
 
     <!--查询快递按钮-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/button_search"
-            android:layout_height="wrap_content"
-            android:layout_width="180dp"
-            android:layout_marginTop="450dp"
-            android:layout_gravity="center"
-            android:text="@string/search"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints"
-            />
-    </LinearLayout>
 
-
-
+    <Button
+        android:id="@+id/button_search"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/search"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hobbyTv"
+        tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>

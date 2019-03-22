@@ -1,0 +1,60 @@
+﻿{
+	"spinnerList": [
+            {
+                "paraName": "中通快递",
+                "paraValue": "ZTO"
+            },
+            {
+                "paraName": "圆通速递",
+                "paraValue": "YTO"
+            },
+            {
+                "paraName": "韵达速递",
+                "paraValue": "YD"
+            },
+            {
+                "paraName": "邮政快递",
+                "paraValue": "YZPY"
+            },
+            {
+                "paraName": "EMS",
+                "paraValue": "EMS"
+            },
+            {
+                "paraName": "京东快递",
+                "paraValue": "JD"
+            },
+            {
+                "paraName": "宅急送",
+                "paraValue": "ZJS"
+            },
+            {
+                "paraName": "优速快递",
+                "paraValue": "UC"
+            },
+            {
+                "paraName": "德邦快递",
+                "paraValue": "DBL"
+            },
+            {
+                "paraName": "TNT快递",
+                "paraValue": "TNT"
+            },
+            {
+                "paraName": "UPS",
+                "paraValue": "UPS"
+            },
+            {
+                "paraName": "DHL",
+                "paraValue": "DHL"
+            },
+            {
+                "paraName": "FEDEX联邦(国内件）",
+                "paraValue": "FEDEX"
+            },
+            {
+                "paraName": "FEDEX联邦(国际件）",
+                "paraValue": "FEDEX_GJ"
+            }
+	]
+}

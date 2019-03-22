@@ -96,21 +96,36 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             public void onClick(View view) {
                 try{
                     List<Account> accountList = DataSupport.findAll(Account.class);
-                    if(accountList.size() == 0){
-                        System.out.println("accountList为空");
+
+                    String email = mEmailView.getText().toString();
+                    // 判断是否存在此用户的变量，不存在则拦截登录并提示，不然会闪退
+                    boolean exit = false;
+                    View focusView = null;
+                    mEmailView.setError(null);
+                    for(Account data:accountList){
+                        if(data.getAuthor().equals(email)){
+                            exit = true;
+                        }
+                    }
+
+                    // 判断是否存在此用户，不存在则拦截登录并提示，不然会闪退
+                    if(accountList.size() == 0 || !exit){
+                        mEmailView.setError("该用户名不存在");
+                        focusView = mEmailView;
+                        focusView.requestFocus();
+                        System.out.println("accountList为空或用户名不存在");
                     }
                     else {
                         for(int index = 0; index<accountList.size(); index++){
                             DUMMY_CREDENTIALS[index] = accountList.get(index).getAuthor() + ":" + accountList.get(index).getPassWord();
-                            System.out.println(accountList.size());
-                            System.out.println(accountList.get(index).getId() + "a" + accountList.get(index).getAuthor() + "p" + accountList.get(index).getPassWord());
+                            attemptLogin();
                         }
                     }
                 }catch (Exception e){
                     System.out.println("登录出错");
                 }
 
-                attemptLogin();
+
             }
         });
 
@@ -132,7 +147,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
                 // Check for a valid password, if the user entered one.
                 if (password.contains(":")) {
-                    mPasswordView.setError("密码中不能包含字符:");
+                    mPasswordView.setError("密码中不能包含字符\":\"");
                     focusView = mPasswordView;
                     cancel = true;
                 }
@@ -154,7 +169,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     cancel = true;
                 }
                 else if(email.contains(":")){
-                    mEmailView.setError("密码中不能包含字符");
+                    mEmailView.setError("用户名中不能包含字符\":\"");
                     focusView = mEmailView;
                     cancel = true;
                 }

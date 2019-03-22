@@ -75,25 +75,30 @@
 
             </android.support.design.widget.TextInputLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <!--登录按钮-->
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
-            <!--注册按钮-->
             <Button
                 android:id="@+id/email_sign_up_button"
                 style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
+                android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in_short"
                 android:textStyle="bold" />
+
+            <!--注册按钮-->
+        </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
