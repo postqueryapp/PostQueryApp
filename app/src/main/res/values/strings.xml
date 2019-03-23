@@ -29,4 +29,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="select_Company_Please">请选择物流公司</string>
 </resources>

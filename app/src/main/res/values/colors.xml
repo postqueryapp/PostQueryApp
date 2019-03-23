@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#86007A85</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#007A85</color>
+    <color name="colorPrimaryDark">#354c9b</color>
     <color name="colorAccent">#D81B60</color>
 
     <!-- **************************pickerview选择器常用颜色值********************************** -->

@@ -7,71 +7,87 @@
     android:background="#F0F8FF"
     >
 
-    <!--退出登录按钮-->
-    <Button
-        android:id="@+id/button_out_sign"
-        android:layout_width="180dp"
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/pickerview_title_text_color"
-        android:text="@string/out_login"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.26999998"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints">
 
-    <!--地址管理按钮-->
-    <Button
-        android:id="@+id/button_address"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:background="@color/pickerview_title_text_color"
-        android:text="@string/address"
-        app:layout_constraintEnd_toEndOf="@+id/button_out_sign"
-        app:layout_constraintStart_toStartOf="@+id/button_out_sign"
-        app:layout_constraintTop_toBottomOf="@+id/button_out_sign"
-        tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!--退出登录按钮-->
+            <Button
+                android:id="@+id/button_out_sign"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/pickerview_title_text_color"
+                android:text="@string/out_login"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.26999998"
+                tools:ignore="MissingConstraints" />
 
-    <!--设置按钮-->
-    <Button
-        android:id="@+id/button_pre"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:background="@color/pickerview_title_text_color"
-        android:text="@string/setting"
-        app:layout_constraintEnd_toEndOf="@+id/button_address"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button_address"
-        app:layout_constraintTop_toBottomOf="@+id/button_address"
-        tools:ignore="MissingConstraints" />
+            <!--地址管理按钮-->
+            <Button
+                android:id="@+id/button_address"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:background="@color/pickerview_title_text_color"
+                android:text="@string/address"
+                app:layout_constraintEnd_toEndOf="@+id/button_out_sign"
+                app:layout_constraintStart_toStartOf="@+id/button_out_sign"
+                app:layout_constraintTop_toBottomOf="@+id/button_out_sign"
+                tools:ignore="MissingConstraints" />
 
-    <!--退出按钮-->
+            <!--设置按钮-->
+            <Button
+                android:id="@+id/button_pre"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:background="@color/pickerview_title_text_color"
+                android:text="@string/setting"
+                app:layout_constraintEnd_toEndOf="@+id/button_address"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/button_address"
+                app:layout_constraintTop_toBottomOf="@+id/button_address"
+                tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/button_out"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:background="@color/pickerview_title_text_color"
-        android:text="退出"
-        app:layout_constraintEnd_toEndOf="@+id/button_pre"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button_pre"
-        app:layout_constraintTop_toBottomOf="@+id/button_pre"
-        tools:ignore="MissingConstraints" />
+            <!--退出按钮-->
+
+            <Button
+                android:id="@+id/button_out"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:background="@color/pickerview_title_text_color"
+                android:text="退出"
+                app:layout_constraintEnd_toEndOf="@+id/button_pre"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/button_pre"
+                app:layout_constraintTop_toBottomOf="@+id/button_pre"
+                tools:ignore="MissingConstraints" />
+
+        </LinearLayout>
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.app.postqueryapp.mineFragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +31,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * 物流查询界面 碎片
  */
@@ -44,20 +48,45 @@ public class SearchFragment extends Fragment {
     // 物流公司对应的编号
     private String selectCode = null;
 
+    // 是否记住查询信息
+    private CheckBox checkBoxInfo = null;
+
     private TextView hobbyTv;//选择爱好
     /**爱好列表集合*/
     private ArrayList<SpinnearBean> mHobbyList;
     private ArrayList<String> mHobbyNameList;//用于选择器显示
     private OptionsPickerView mHobbyPickerView;//选择器
 
+    private View.OnKeyListener backlistener = new View.OnKeyListener() {
+        @Override
+        public boolean onKey(View view, int i, KeyEvent keyEvent) {
+            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                //这边判断,如果是back的按键被点击了   就自己拦截实现掉
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    return true;//表示处理了
+                }
+            }
+            return false;
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.activity_third, container, false);
         // 查询界面
         searchView = view;
+
         // 所填快递单号
         selectNumber = view.findViewById(R.id.input);
+
+        // 是否记住查询信息
+        checkBoxInfo = view.findViewById(R.id.checkBox_info);
+
+
+
+        initViews();
+        initDatas();
+        initEvents();
 
         //监听back必须设置的
         view.setFocusable(true);
@@ -68,6 +97,20 @@ public class SearchFragment extends Fragment {
         /**
          * 查询按钮 监听事件
          */
+        try{
+            SharedPreferences pref = searchView.getContext().getSharedPreferences("Info", MODE_PRIVATE);
+            checkBoxInfo.setChecked(pref.getBoolean("isMemoryInfo", false));
+            if(pref.getBoolean("isMemoryInfo", false)){
+                System.out.println("正在提取查询记录");
+                selectNumber.setText(pref.getString("MemoryNumber",null));
+                System.out.println("提取时MemoryCompany为" + pref.getString("MemoryCompany",null));
+                hobbyTv.setText(pref.getString("MemoryCompany",null));
+                selectCode = mHobbyList.get(mHobbyNameList.indexOf(hobbyTv.getText().toString())).getParaValue();
+            }
+        }catch (Exception e){
+            System.out.println("取查询记录出错");
+        }
+
         Button search = view.findViewById(R.id.button_search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +130,7 @@ public class SearchFragment extends Fragment {
                 }
 
                 // 查询信息 校验
-                if(selectCode.isEmpty()){
+                if(selectCode == null || selectCode.length()== 0){
                     hobbyTv.setError("请选择快递公司");
                     focuse = hobbyTv;
                     cancel = true;
@@ -98,6 +141,20 @@ public class SearchFragment extends Fragment {
                     focuse.requestFocus();
                 }
                 else{
+                    if(checkBoxInfo.isChecked()){
+                        System.out.println("正在保存查询记录");
+                        SharedPreferences.Editor editor = searchView.getContext().getSharedPreferences("Info", MODE_PRIVATE).edit();
+                        editor.putString("MemoryNumber", selectNumber.getText().toString());
+                        editor.putString("MemoryCompany", hobbyTv.getText().toString());
+                        System.out.println("MemoryCompany为" + hobbyTv.getText().toString());
+                        editor.putBoolean("isMemoryInfo", checkBoxInfo.isChecked());
+                        editor.apply();
+                    } else{
+                        System.out.println("正在取消保存查询记录");
+                        SharedPreferences.Editor editor = searchView.getContext().getSharedPreferences("Info", MODE_PRIVATE).edit();
+                        editor.putBoolean("isMemoryInfo", checkBoxInfo.isChecked());
+                        editor.apply();
+                    }
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("selectCode",selectCode);
                     intent.putExtra("selectNumber",selectNumber.getText().toString());
@@ -117,11 +174,6 @@ public class SearchFragment extends Fragment {
 //                ShowChoise();
 //            }
 //        });
-
-
-        initViews();
-        initDatas();
-        initEvents();
 
         return view;
     }
@@ -285,18 +337,5 @@ public class SearchFragment extends Fragment {
     }
 
 
-    private View.OnKeyListener backlistener = new View.OnKeyListener() {
-        @Override
-        public boolean onKey(View view, int i, KeyEvent keyEvent) {
-            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                //这边判断,如果是back的按键被点击了   就自己拦截实现掉
-                if (i == KeyEvent.KEYCODE_BACK) {
-                    Toast.makeText(searchView.getContext(), "BACK拦截", Toast.LENGTH_SHORT).show();
-                    return true;//表示处理了
-                }
-            }
-            return false;
-        }
-    };
 
 }

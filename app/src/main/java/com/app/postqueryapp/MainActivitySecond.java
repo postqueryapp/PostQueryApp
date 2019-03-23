@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
@@ -131,5 +132,20 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
             default:
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                return true;
+
+            case KeyEvent.KEYCODE_MENU:
+                return true;
+
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

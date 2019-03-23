@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +64,10 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     private View mProgressView;
     private View mLoginFormView;
 
+    // 是否记住账户、密码
+    private CheckBox checkBoxAccount = null;
+    private CheckBox checkBoxPassword = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +83,46 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 //        populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+
+        /**
+         * 提取记住的账号、密码
+         */
+        checkBoxAccount = findViewById(R.id.checkBox_account);
+        checkBoxPassword = findViewById(R.id.checkBox_password);
+        try{
+            SharedPreferences pref = getSharedPreferences("Memory", MODE_PRIVATE);
+            checkBoxAccount.setChecked(pref.getBoolean("isMemoryAccount", false));
+            checkBoxPassword.setChecked(pref.getBoolean("isMemoryPassword", false));
+            if(pref.getBoolean("isMemoryAccount", false)){
+                System.out.println("正在提取账号");
+                mEmailView.setText(pref.getString("MemoryAccount",null));
+                System.out.println("账号为" + pref.getString("MemoryAccount",null));
+            }
+            if(pref.getBoolean("isMemoryPassword", false)){
+                System.out.println("正在提取密码");
+                mPasswordView.setText(pref.getString("MemoryPassword",null));
+                System.out.println("密码为" + pref.getString("MemoryPassword",null));
+            }
+        }catch (Exception e){
+            System.out.println("取记录出错");
+        }
+        checkBoxPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(checkBoxPassword.isChecked()){
+                    checkBoxAccount.setChecked(checkBoxPassword.isChecked());
+                }
+            }
+        });
+        checkBoxAccount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!checkBoxAccount.isChecked()){
+                    checkBoxPassword.setChecked(checkBoxAccount.isChecked());
+                }
+            }
+        });
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -86,6 +133,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 return false;
             }
         });
+
 
         /**
          * 登录按钮事件，主要是从sqlLite数据库取出所注册的所有的account信息，检测是否匹配
@@ -118,8 +166,32 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                     else {
                         for(int index = 0; index<accountList.size(); index++){
                             DUMMY_CREDENTIALS[index] = accountList.get(index).getAuthor() + ":" + accountList.get(index).getPassWord();
-                            attemptLogin();
                         }
+                        if(checkBoxAccount.isChecked()){
+                            System.out.println("正在保存账号");
+                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                            editor.putString("MemoryAccount", mEmailView.getText().toString());
+                            editor.putBoolean("isMemoryAccount", checkBoxAccount.isChecked());
+                            editor.apply();
+                        } else{
+                            System.out.println("正在取消保存账号");
+                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                            editor.putBoolean("isMemoryAccount", checkBoxAccount.isChecked());
+                            editor.apply();
+                        }
+                        if(checkBoxPassword.isChecked()){
+                            System.out.println("正在保存密码");
+                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                            editor.putString("MemoryPassword", mPasswordView.getText().toString());
+                            editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
+                            editor.apply();
+                        } else{
+                            System.out.println("正在取消保存密码");
+                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                            editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
+                            editor.apply();
+                        }
+                        attemptLogin();
                     }
                 }catch (Exception e){
                     System.out.println("登录出错");
