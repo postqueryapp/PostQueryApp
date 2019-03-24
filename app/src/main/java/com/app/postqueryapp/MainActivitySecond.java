@@ -1,5 +1,6 @@
 package com.app.postqueryapp;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -96,6 +98,12 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
         MyFragmentPagerAdapter adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragments);
 //      MyFragmentStatePagerAdapter adapter = new MyFragmentStatePagerAdapter(getFragmentManager(), fragments);
         viewPager.setAdapter(adapter);
+
+        TextView textView = findViewById(R.id.search_post);
+        textView.setTextColor(getResources().getColor(R.color.color_Bottom));
+
+        ImageView imageView = findViewById(R.id.search_image);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.search2));
     }
 
     /**
@@ -109,25 +117,57 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
 
     private void changeTab(int id) {
         TextView changeTitle = findViewById(R.id.title);
+
+        TextView textViewSearch = findViewById(R.id.search_post);
+        TextView textViewMine = findViewById(R.id.mine);
+
+        ImageView imageViewSearch = findViewById(R.id.search_image);
+        ImageView imageViewMine = findViewById(R.id.mine_image);
         tvCurrent.setSelected(false);
         switch (id) {
             case
                 R.id.search_layout:
                 changeTitle.setText("查询快递");
                 viewPager.setCurrentItem(0);
+
+                textViewSearch.setTextColor(getResources().getColor(R.color.color_Bottom));
+                textViewMine.setTextColor(getResources().getColor(R.color.pickerview_cancel_text_color));
+
+                imageViewSearch.setImageDrawable(getResources().getDrawable(R.drawable.search2));
+                imageViewMine.setImageDrawable(getResources().getDrawable(R.drawable.center1));
             case 0:
                 changeTitle.setText("查询快递");
                 search.setSelected(true);
                 tvCurrent = search;
+
+                textViewSearch.setTextColor(getResources().getColor(R.color.color_Bottom));
+                textViewMine.setTextColor(getResources().getColor(R.color.pickerview_cancel_text_color));
+
+                imageViewSearch.setImageDrawable(getResources().getDrawable(R.drawable.search2));
+                imageViewMine.setImageDrawable(getResources().getDrawable(R.drawable.center1));
                 break;
             case
                 R.id.mine_layout:
                 changeTitle.setText("我的中心");
                 viewPager.setCurrentItem(1);
+
+                findViewById(R.id.input).clearFocus();
+                textViewMine.setTextColor(getResources().getColor(R.color.color_Bottom));
+                textViewSearch.setTextColor(getResources().getColor(R.color.pickerview_cancel_text_color));
+
+                imageViewSearch.setImageDrawable(getResources().getDrawable(R.drawable.search1));
+                imageViewMine.setImageDrawable(getResources().getDrawable(R.drawable.center2));
             case 1:
                 changeTitle.setText("我的中心");
                 mine.setSelected(true);
                 tvCurrent = mine;
+
+                findViewById(R.id.input).clearFocus();
+                textViewMine.setTextColor(getResources().getColor(R.color.color_Bottom));
+                textViewSearch.setTextColor(getResources().getColor(R.color.pickerview_cancel_text_color));
+
+                imageViewSearch.setImageDrawable(getResources().getDrawable(R.drawable.search1));
+                imageViewMine.setImageDrawable(getResources().getDrawable(R.drawable.center2));
                 break;
             default:
                 break;

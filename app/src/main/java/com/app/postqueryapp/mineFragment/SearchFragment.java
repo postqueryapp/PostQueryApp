@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +50,8 @@ public class SearchFragment extends Fragment {
     // 是否记住查询信息
     private CheckBox checkBoxInfo = null;
 
-    private TextView hobbyTv;//选择爱好
-    /**爱好列表集合*/
+    private TextView hobbyTv;//选择快递公司
+    /**快递公司列表集合*/
     private ArrayList<SpinnearBean> mHobbyList;
     private ArrayList<String> mHobbyNameList;//用于选择器显示
     private OptionsPickerView mHobbyPickerView;//选择器
@@ -335,7 +334,4 @@ public class SearchFragment extends Fragment {
         }
         return content;
     }
-
-
-
 }
