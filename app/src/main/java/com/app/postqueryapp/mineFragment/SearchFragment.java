@@ -223,8 +223,6 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
         }
         for(SpinnearBean spinnearBean : mHobbyList){
-            System.out.println("9999999999999999999999999999999999999999");
-            System.out.println(spinnearBean.getParaName() +"   " + spinnearBean.getParaValue());
             mHobbyNameList.add(spinnearBean.getParaName());
         }
 
@@ -236,7 +234,7 @@ public class SearchFragment extends Fragment {
         }*/
     }
 
-    //初始化爱好选择器
+    //初始化快递公司选择器
     private void initHobbyOptionPicker() {
         mHobbyPickerView = new OptionsPickerBuilder(searchView.getContext(), new OnOptionsSelectListener() {
             @Override

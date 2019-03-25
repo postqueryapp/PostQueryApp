@@ -1,5 +1,6 @@
 package com.app.postqueryapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +56,14 @@ public class MainActivity extends BaseActivity {
             actionBar.hide();
         }
 
+        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
+        dialog.setCancelable(false);// 设置是否可以通过点击Back键取消
+        dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        // 设置提示的title的图标，默认是没有的，如果没有设置title的话只设置Icon是不会显示图标的
+        dialog.setTitle("查询中");
+        dialog.setMessage("请稍后......");
+        dialog.show();
         // 获得滑动控件视图
         recyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -79,8 +88,15 @@ public class MainActivity extends BaseActivity {
                     inforHandles.add(information);
                 }
                 Log.i("mylog","请求结果-->" + infos.toString());
+                if(inforHandles.size() == 0 ){
+                    QueryInformation information = new QueryInformation();
+                    information.setInfo("单号暂无物流信息");
+                    information.setTime("或者输入单号有误");
+                    inforHandles.add(information);
+                }
                 adapter = new QueryAdapter(inforHandles);
                 recyclerView.setAdapter(adapter);
+                dialog.cancel();
             }
         };
 
@@ -98,29 +114,36 @@ public class MainActivity extends BaseActivity {
                     String selectNumber = getIntent().getStringExtra("selectNumber");
                     Thread.sleep(1000);
                     result = api.getQueryInformation(selectCode, selectNumber);
-                    String state = jxJson("state", result);
-                    result = jxJson("Traces", result);
-                    int acceptStation = 0;
-                    int acceptTime = 0;
-                    acceptStation = result.indexOf("\"AcceptStation\":\"", acceptStation) + 17;
-                    acceptTime = result.indexOf("\",\"AcceptTime\"", acceptStation);
-                    for(;!(acceptStation == -1 && acceptTime == -1);){
-                        QueryInformation info = new QueryInformation();
+                    String ifNull =jxJson("Traces", result);
+                    if(!ifNull.equals("[]")){
 
-                        info.setInfo(result.substring(acceptStation, acceptTime));
-                        acceptStation = result.indexOf("\"},{\"AcceptStation\":\"", acceptTime);
-                        if(acceptStation == -1){
-                            info.setTime(result.substring(acceptTime, acceptTime + 20));
-                            break;
+                        String state = jxJson("state", result);
+                        result = jxJson("Traces", result);
+                        int acceptStation = 0;
+                        int acceptTime = 0;
+                        acceptStation = result.indexOf("\"AcceptStation\":\"", acceptStation) + 17;
+                        acceptTime = result.indexOf("\",\"AcceptTime\"", acceptStation);
+
+                        for(;!(acceptStation == -1 && acceptTime == -1);){
+                            QueryInformation info = new QueryInformation();
+
+                            info.setInfo(result.substring(acceptStation, acceptTime));
+                            acceptStation = result.indexOf("\"},{\"AcceptStation\":\"", acceptTime);
+                            if(acceptStation == -1){
+                                info.setTime(result.substring(acceptTime, acceptTime + 20));
+                                break;
+                            }
+                            acceptTime += 16;
+                            info.setTime(result.substring(acceptTime, acceptStation));
+                            acceptTime = result.indexOf("\",\"AcceptTime\":\"", acceptStation);
+                            acceptStation += 21;
+                            informationList.add(info);
                         }
-                        acceptTime += 16;
-                        info.setTime(result.substring(acceptTime, acceptStation));
-                        acceptTime = result.indexOf("\",\"AcceptTime\":\"", acceptStation);
-                        acceptStation += 21;
-                        informationList.add(info);
-                    }
-                    if(informationList.size() != 0){
-                        informationList.get(0).setStatus(state);
+
+                        if(informationList.size() != 0){
+                            informationList.get(0).setStatus(state);
+                        }
+
                     }
                 }catch (Exception e){
                     e.printStackTrace();

@@ -3,6 +3,8 @@ package com.app.postqueryapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -29,10 +31,13 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.postqueryapp.dto.Account;
+import com.app.postqueryapp.progressBar.MProgressView;
+
 import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +66,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private View mProgressView;
+    private ProgressBar mProgressView;
     private View mLoginFormView;
+    private View activity;
 
     // 是否记住账户、密码
     private CheckBox checkBoxAccount = null;
@@ -191,6 +197,15 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                             editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
                             editor.apply();
                         }
+
+                        final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
+                        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
+                        dialog.setCancelable(false);// 设置是否可以通过点击Back键取消
+                        dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+                        // 设置提示的title的图标，默认是没有的，如果没有设置title的话只设置Icon是不会显示图标的
+                        dialog.setTitle("登陆中");
+                        dialog.setMessage("请稍后......");
+                        dialog.show();
                         attemptLogin();
                     }
                 }catch (Exception e){
@@ -270,7 +285,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
     }
 
     private void populateAutoComplete() {
@@ -370,7 +384,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
+//            showProgress(true);
+
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -516,7 +531,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
 
             if (success) {
 
@@ -532,7 +546,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
         }
     }
 
