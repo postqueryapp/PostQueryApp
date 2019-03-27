@@ -12,5 +12,6 @@
     <color name="pickerview_cancel_text_color">#979696</color>
     <color name="pickerview_submit_text_color">#FAA359</color>
     <color name="pickerview_title_text_color">#561A78EC</color>
+    <color name="pickerview_search_text_color">#89C7E9</color>
     <color name="pickerview_center_text_color">#333333</color>
 </resources>

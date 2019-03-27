@@ -1,29 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<RelativeLayout android:layout_width="match_parent"
+    android:id="@+id/search_layout"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F8FF"
     tools:context=".MainActivity">
+
 
     <!--输入快递单号-->
     <EditText
         android:id="@+id/input"
         android:layout_width="293dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="#ffffff"
         android:hint="@string/input_please"
         android:textAllCaps="false"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.46"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.356"
+        app:layout_constraintVertical_bias="0.36"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="40dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="10dp"
+        android:background="#ffffff"
+        android:text="清除"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/input"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.36"
         tools:ignore="MissingConstraints" />
 
     <!--选择快递公司按钮-->
@@ -36,7 +63,6 @@
         android:drawableRight="@drawable/pickerview_jiantou"
         android:text="@string/select_Company_Please"
         android:textSize="24sp"
-        app:layout_constraintHorizontal_bias="0.46"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input"
@@ -54,7 +80,6 @@
         android:layout_weight="1"
         android:text="记住查询信息"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hobbyTv"
         tools:ignore="MissingConstraints" />
@@ -65,9 +90,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/search"
-        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox_info"
         tools:ignore="MissingConstraints" />
+
+
 </android.support.constraint.ConstraintLayout>
+</RelativeLayout>

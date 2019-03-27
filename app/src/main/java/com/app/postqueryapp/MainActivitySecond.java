@@ -11,12 +11,14 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.postqueryapp.mineFragment.MineFragment;
 import com.app.postqueryapp.mineFragment.MyFragmentPagerAdapter;
 import com.app.postqueryapp.mineFragment.SearchFragment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +33,12 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
     private LinearLayout searchLayout, mineLayout;
     // 查询物流文字 和 我的中心文字 和 当前碎片
     private TextView search, mine, tvCurrent;
+
+    private int outProgress = 0;
+
+    private Date startTime = null;
+
+    private Date endTime = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +184,22 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        outProgress++;
+        if(startTime != null && outProgress == 2){
+            endTime = new Date();
+            if(endTime.getTime() - startTime.getTime() < 3000){
+                ActivityController.finishAll();
+            }
+            else{
+                outProgress = 0;
+                startTime = null;
+                endTime = null;
+            }
+        }
+        if(outProgress == 1){
+            Toast.makeText(MainActivitySecond.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            startTime = new Date();
+        }
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 return true;

@@ -80,23 +80,33 @@ public class MainActivity extends BaseActivity {
                 Bundle data = msg.getData();
                 ArrayList<String> infos = new ArrayList<>();
                 infos = data.getStringArrayList("info");
-                for(int i =0; i<infos.size(); i++){
+                String status = data.getString("status");
+                for(int i =infos.size() - 1; i >= 0; i--){
                     QueryInformation information = new QueryInformation();
-                    information.setInfo(infos.get(i));
-                    i++;
                     information.setTime(infos.get(i));
+                    i--;
+                    if(i == -1)
+                        break;
+                    information.setInfo(infos.get(i));
                     inforHandles.add(information);
                 }
                 Log.i("mylog","请求结果-->" + infos.toString());
                 if(inforHandles.size() == 0 ){
                     QueryInformation information = new QueryInformation();
-                    information.setInfo("单号暂无物流信息");
-                    information.setTime("或者输入单号有误");
+                    information.setInfo("暂无物流轨迹");
                     inforHandles.add(information);
+
+                    adapter = new QueryAdapter(inforHandles);
+                    recyclerView.setAdapter(adapter);
+                    dialog.cancel();
                 }
-                adapter = new QueryAdapter(inforHandles);
-                recyclerView.setAdapter(adapter);
-                dialog.cancel();
+                else{
+                    String selectCompany = getIntent().getStringExtra("selectCompany");
+                    String selectNumber = getIntent().getStringExtra("selectNumber");
+                    adapter = new QueryAdapter(inforHandles, selectNumber, selectCompany, status);
+                    recyclerView.setAdapter(adapter);
+                    dialog.cancel();
+                }
             }
         };
 
@@ -117,7 +127,14 @@ public class MainActivity extends BaseActivity {
                     String ifNull =jxJson("Traces", result);
                     if(!ifNull.equals("[]")){
 
-                        String state = jxJson("state", result);
+                        String state = jxJson("State", result);
+                        switch (state){
+                            case "2":state = "在途中";break;
+                            case "3":state = "已签收";break;
+                            case "4":state = "问题件";break;
+                            default :break;
+                        }
+
                         result = jxJson("Traces", result);
                         int acceptStation = 0;
                         int acceptTime = 0;
@@ -158,6 +175,9 @@ public class MainActivity extends BaseActivity {
                     infos.add(data.getTime());
                 }
                 bundle.putStringArrayList("info", infos);
+                if(informationList.size() != 0){
+                    bundle.putString("status", informationList.get(0).getStatus());
+                }
                 Message msg = Message.obtain();
                 msg.setData(bundle);
                 // 这里是向线程通信队列MessageQueue 发送Message

@@ -1,6 +1,8 @@
 package com.app.postqueryapp.adapter;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,12 @@ import java.util.List;
 public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
 
     private List<QueryInformation> informationList;
+
+    private String postNumber;
+
+    private String postCompany;
+
+    private String status;
 
     /**
      * 定义一个信息框体， 承载一条详细信息 和 其创建时间
@@ -36,6 +44,17 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
      * 适配器的构造方法， 用于初始化数据
      * @param informationList
      */
+    public QueryAdapter(List<QueryInformation> informationList, String postNumber, String postCompany, String status){
+        this.informationList = informationList;
+        this.postNumber = postNumber;
+        this.postCompany = postCompany;
+        this.status = status;
+        QueryInformation queryInformation = new QueryInformation();
+        queryInformation.setInfo("单号：" + postNumber);
+        queryInformation.setTime(postCompany + " 状态：" + status);
+        informationList.add(0,queryInformation);
+    }
+
     public QueryAdapter(List<QueryInformation> informationList){
         this.informationList = informationList;
     }
@@ -48,6 +67,7 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.info_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
 
@@ -61,9 +81,25 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        QueryInformation queryInformation = informationList.get(position);
-        holder.time.setText(queryInformation.getTime());
-        holder.info.setText(queryInformation.getInfo());
+        if(getItemCount() == 1 && informationList.get(0).getInfo().equals("暂无物流轨迹")){
+            QueryInformation queryInformation = informationList.get(position);
+            holder.info.setText(queryInformation.getInfo());
+            holder.info.setTextColor(Color.RED);
+            holder.info.setGravity(Gravity.CENTER);
+            holder.time.setVisibility(View.INVISIBLE);
+        }
+        else if(position == 0 && !informationList.get(0).getInfo().equals("暂无物流轨迹")){
+            QueryInformation queryInformation = informationList.get(position);
+            holder.time.setText("  " + queryInformation.getInfo() + "  " + queryInformation.getTime());
+            holder.time.setBackgroundColor(Color.YELLOW);
+            holder.time.setGravity(Gravity.CENTER);
+            holder.info.setVisibility(View.INVISIBLE);
+        }
+        else{
+            QueryInformation queryInformation = informationList.get(position);
+            holder.time.setText(queryInformation.getTime());
+            holder.info.setText(queryInformation.getInfo());
+        }
     }
 
     /**
@@ -72,7 +108,6 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
      */
     @Override
     public int getItemCount(){
-        System.out.println(informationList.size());
         return informationList.size();
     }
 }

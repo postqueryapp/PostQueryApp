@@ -10,13 +10,17 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.postqueryapp.ActivityController;
 import com.app.postqueryapp.MainActivity;
+import com.app.postqueryapp.MainActivitySecond;
 import com.app.postqueryapp.R;
 import com.app.postqueryapp.bean.SpinnearBean;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
@@ -29,6 +33,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -50,11 +55,19 @@ public class SearchFragment extends Fragment {
     // 是否记住查询信息
     private CheckBox checkBoxInfo = null;
 
+    private Button buttonDelete = null;
+
     private TextView hobbyTv;//选择快递公司
     /**快递公司列表集合*/
     private ArrayList<SpinnearBean> mHobbyList;
     private ArrayList<String> mHobbyNameList;//用于选择器显示
     private OptionsPickerView mHobbyPickerView;//选择器
+
+    private int outProgress = 0;
+
+    private Date startTime = null;
+
+    private Date endTime = null;
 
     private View.OnKeyListener backlistener = new View.OnKeyListener() {
         @Override
@@ -62,6 +75,22 @@ public class SearchFragment extends Fragment {
             if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                 //这边判断,如果是back的按键被点击了   就自己拦截实现掉
                 if (i == KeyEvent.KEYCODE_BACK) {
+                    outProgress++;
+                    if(startTime != null && outProgress == 2){
+                        endTime = new Date();
+                        if(endTime.getTime() - startTime.getTime() < 3000){
+                            ActivityController.finishAll();
+                        }
+                        else{
+                            outProgress = 0;
+                            startTime = null;
+                            endTime = null;
+                        }
+                    }
+                    if(outProgress == 1){
+                        Toast.makeText(searchView.getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                        startTime = new Date();
+                    }
                     return true;//表示处理了
                 }
             }
@@ -110,6 +139,35 @@ public class SearchFragment extends Fragment {
             System.out.println("取查询记录出错");
         }
 
+        buttonDelete = view.findViewById(R.id.button_delete);
+        buttonDelete.setVisibility(View.INVISIBLE);
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectNumber.setText(null);
+            }
+        });
+
+//        selectNumber.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                buttonDelete.setVisibility(View.VISIBLE);
+//            }
+//        });
+
+        selectNumber.setOnFocusChangeListener(new android.view.View.
+                OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    buttonDelete.setVisibility(View.VISIBLE);
+                } else {
+                    buttonDelete.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
         Button search = view.findViewById(R.id.button_search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +213,7 @@ public class SearchFragment extends Fragment {
                         editor.apply();
                     }
                     Intent intent = new Intent(getActivity(), MainActivity.class);
+                    intent.putExtra("selectCompany",hobbyTv.getText().toString());
                     intent.putExtra("selectCode",selectCode);
                     intent.putExtra("selectNumber",selectNumber.getText().toString());
                     startActivity(intent);
@@ -246,7 +305,7 @@ public class SearchFragment extends Fragment {
                 Toast.makeText(searchView.getContext(), selectCode, Toast.LENGTH_SHORT).show();
             }
         })
-//                .setDecorView((RelativeLayout)searchView.findViewById(R.id.activity_rootview))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
+//                .setDecorView((RelativeLayout)searchView.findViewById(R.id.search_layout))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域
                 .setTitleText("选择快递公司")//标题文字
                 .setTitleSize(20)//标题文字大小
                 .setTitleColor(getResources().getColor(R.color.pickerview_title_text_color))//标题文字颜色
@@ -269,6 +328,9 @@ public class SearchFragment extends Fragment {
         hobbyTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager inputMethodManager = (InputMethodManager) searchView.getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(selectNumber.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//同上，editText也为你要收起键盘的那个EditText对象控件
                 mHobbyPickerView.show();
             }
         });
