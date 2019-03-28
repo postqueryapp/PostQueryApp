@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -144,7 +145,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         /**
          * 登录按钮事件，主要是从sqlLite数据库取出所注册的所有的account信息，检测是否匹配
          */
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        final Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,6 +206,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         // 设置提示的title的图标，默认是没有的，如果没有设置title的话只设置Icon是不会显示图标的
                         dialog.setTitle("登陆中");
                         dialog.setMessage("请稍后......");
+                        InputMethodManager inputMethodManager = (InputMethodManager) LoginActivity.this.getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(mEmailSignInButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                         dialog.show();
                         attemptLogin();
                     }

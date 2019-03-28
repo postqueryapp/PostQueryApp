@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.postqueryapp.ActivityController;
+import com.app.postqueryapp.LoginActivity;
 import com.app.postqueryapp.MainActivity;
 import com.app.postqueryapp.MainActivitySecond;
 import com.app.postqueryapp.R;
@@ -201,6 +202,9 @@ public class SearchFragment extends Fragment {
                     focuse = selectNumber;
                     cancel = true;
                 }
+                else{
+                    cancel = false;
+                }
 
                 // 查询信息 校验
                 if(TextUtils.isEmpty(selectNumber.getText())){
@@ -219,6 +223,7 @@ public class SearchFragment extends Fragment {
                 // cancel为false，则校验成功， 传去查询物流信息， true则失败， 获得焦点
                 if(cancel){
                     focuse.requestFocus();
+                    cancel = false;
                 }
                 else{
                     if(checkBoxInfo.isChecked()){
@@ -235,6 +240,8 @@ public class SearchFragment extends Fragment {
                         editor.putBoolean("isMemoryInfo", checkBoxInfo.isChecked());
                         editor.apply();
                     }
+                    InputMethodManager inputMethodManager = (InputMethodManager) searchView.getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(selectNumber.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     intent.putExtra("selectCompany",hobbyTv.getText().toString());
                     intent.putExtra("selectCode",selectCode);
