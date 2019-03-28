@@ -184,31 +184,33 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        outProgress++;
-        if(startTime != null && outProgress == 2){
-            endTime = new Date();
-            if(endTime.getTime() - startTime.getTime() < 3000){
-                ActivityController.finishAll();
+        if(keyCode == event.KEYCODE_BACK){
+            outProgress++;
+            if(startTime != null && outProgress == 2){
+                endTime = new Date();
+                if(endTime.getTime() - startTime.getTime() < 3000){
+                    ActivityController.finishAll();
+                }
+                else{
+                    outProgress = 1;
+                    startTime = null;
+                    endTime = null;
+                }
             }
-            else{
-                outProgress = 0;
-                startTime = null;
-                endTime = null;
+            if(outProgress == 1){
+                Toast.makeText(MainActivitySecond.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                startTime = new Date();
             }
-        }
-        if(outProgress == 1){
-            Toast.makeText(MainActivitySecond.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
-            startTime = new Date();
-        }
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                return true;
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    return true;
 
-            case KeyEvent.KEYCODE_MENU:
-                return true;
+                case KeyEvent.KEYCODE_MENU:
+                    return true;
 
-            default:
-                break;
+                default:
+                    break;
+            }
         }
         return super.onKeyDown(keyCode, event);
     }

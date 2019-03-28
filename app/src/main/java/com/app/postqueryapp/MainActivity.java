@@ -91,18 +91,18 @@ public class MainActivity extends BaseActivity {
                     inforHandles.add(information);
                 }
                 Log.i("mylog","请求结果-->" + infos.toString());
+                String selectCompany = getIntent().getStringExtra("selectCompany");
+                String selectNumber = getIntent().getStringExtra("selectNumber");
                 if(inforHandles.size() == 0 ){
                     QueryInformation information = new QueryInformation();
                     information.setInfo("暂无物流轨迹");
                     inforHandles.add(information);
 
-                    adapter = new QueryAdapter(inforHandles);
+                    adapter = new QueryAdapter(inforHandles, selectNumber, selectCompany);
                     recyclerView.setAdapter(adapter);
                     dialog.cancel();
                 }
                 else{
-                    String selectCompany = getIntent().getStringExtra("selectCompany");
-                    String selectNumber = getIntent().getStringExtra("selectNumber");
                     adapter = new QueryAdapter(inforHandles, selectNumber, selectCompany, status);
                     recyclerView.setAdapter(adapter);
                     dialog.cancel();

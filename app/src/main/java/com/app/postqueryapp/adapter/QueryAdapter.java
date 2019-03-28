@@ -55,8 +55,14 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
         informationList.add(0,queryInformation);
     }
 
-    public QueryAdapter(List<QueryInformation> informationList){
+    public QueryAdapter(List<QueryInformation> informationList, String postNumber, String postCompany){
         this.informationList = informationList;
+        this.postNumber = postNumber;
+        this.postCompany = postCompany;
+        QueryInformation queryInformation = new QueryInformation();
+        queryInformation.setInfo("单号：" + postNumber + "  " + postCompany);
+        queryInformation.setTime(postCompany);
+        informationList.add(0,queryInformation);
     }
 
     /**
@@ -81,19 +87,29 @@ public class QueryAdapter extends RecyclerView.Adapter<QueryAdapter.ViewHolder>{
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position){
-        if(getItemCount() == 1 && informationList.get(0).getInfo().equals("暂无物流轨迹")){
+        if(position == 0 && informationList.get(1).getInfo().equals("暂无物流轨迹")){
+            QueryInformation queryInformation = informationList.get(position);
+            holder.info.setText("  " + queryInformation.getInfo() + "  " + queryInformation.getTime());
+            holder.info.setTextColor(Color.RED);
+            holder.info.setGravity(Gravity.CENTER);
+            holder.info.getLayoutParams().width = 875;
+            holder.time.setVisibility(View.GONE);
+        }
+        else if(getItemCount() == 2 && informationList.get(1).getInfo().equals("暂无物流轨迹")){
             QueryInformation queryInformation = informationList.get(position);
             holder.info.setText(queryInformation.getInfo());
             holder.info.setTextColor(Color.RED);
             holder.info.setGravity(Gravity.CENTER);
-            holder.time.setVisibility(View.INVISIBLE);
+            holder.info.getLayoutParams().width = 875;
+            holder.time.setVisibility(View.GONE);
         }
-        else if(position == 0 && !informationList.get(0).getInfo().equals("暂无物流轨迹")){
+        if(position == 0 && !informationList.get(1).getInfo().equals("暂无物流轨迹")){
             QueryInformation queryInformation = informationList.get(position);
-            holder.time.setText("  " + queryInformation.getInfo() + "  " + queryInformation.getTime());
-            holder.time.setBackgroundColor(Color.YELLOW);
-            holder.time.setGravity(Gravity.CENTER);
-            holder.info.setVisibility(View.INVISIBLE);
+            holder.info.setText("  " + queryInformation.getInfo() + "  " + queryInformation.getTime());
+            holder.info.setGravity(Gravity.CENTER);
+            holder.info.setTextColor(Color.rgb(76, 175, 89));
+            holder.time.setVisibility(View.GONE);
+            holder.info.getLayoutParams().width = 875;
         }
         else{
             QueryInformation queryInformation = informationList.get(position);

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import com.app.postqueryapp.MainActivity;
 import com.app.postqueryapp.MainActivitySecond;
 import com.app.postqueryapp.R;
 import com.app.postqueryapp.bean.SpinnearBean;
+import com.app.postqueryapp.myControls.ClearEditText;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
@@ -34,6 +37,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -44,7 +49,7 @@ public class SearchFragment extends Fragment {
 
 
     // 所填快递单号
-    private EditText selectNumber = null;
+    private ClearEditText selectNumber = null;
 
     // 查询界面
     private View searchView = null;
@@ -54,8 +59,6 @@ public class SearchFragment extends Fragment {
 
     // 是否记住查询信息
     private CheckBox checkBoxInfo = null;
-
-    private Button buttonDelete = null;
 
     private TextView hobbyTv;//选择快递公司
     /**快递公司列表集合*/
@@ -69,12 +72,18 @@ public class SearchFragment extends Fragment {
 
     private Date endTime = null;
 
+    // 定义焦点视图
+    View focuse = null;
+    // 定义校验布尔值
+    boolean cancel = false;
+
+
     private View.OnKeyListener backlistener = new View.OnKeyListener() {
         @Override
         public boolean onKey(View view, int i, KeyEvent keyEvent) {
             if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                 //这边判断,如果是back的按键被点击了   就自己拦截实现掉
-                if (i == KeyEvent.KEYCODE_BACK) {
+                if (i == KeyEvent.KEYCODE_BACK && keyEvent.getRepeatCount() == 0) {
                     outProgress++;
                     if(startTime != null && outProgress == 2){
                         endTime = new Date();
@@ -82,7 +91,7 @@ public class SearchFragment extends Fragment {
                             ActivityController.finishAll();
                         }
                         else{
-                            outProgress = 0;
+                            outProgress = 1;
                             startTime = null;
                             endTime = null;
                         }
@@ -98,6 +107,39 @@ public class SearchFragment extends Fragment {
         }
     };
 
+    private TextWatcher editclick = new TextWatcher() {
+
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+        }
+
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+        }
+
+//一般我们都是在这个里面进行我们文本框的输入的判断，上面两个方法用到的很少
+        @Override
+        public void afterTextChanged(Editable s) {
+            String money = selectNumber.getText().toString();
+            Pattern p = Pattern.compile("[0-9]*");
+            Matcher m = p.matcher(money);
+            if (m.matches()) {
+
+
+            } else {
+                selectNumber.setError("快递单号要求是数字");
+                focuse = selectNumber;
+                cancel = true;
+            }
+       }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.activity_third, container, false);
@@ -110,7 +152,7 @@ public class SearchFragment extends Fragment {
         // 是否记住查询信息
         checkBoxInfo = view.findViewById(R.id.checkBox_info);
 
-
+        selectNumber.addTextChangedListener(editclick);
 
         initViews();
         initDatas();
@@ -139,45 +181,26 @@ public class SearchFragment extends Fragment {
             System.out.println("取查询记录出错");
         }
 
-        buttonDelete = view.findViewById(R.id.button_delete);
-        buttonDelete.setVisibility(View.INVISIBLE);
-
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectNumber.setText(null);
-            }
-        });
-
-//        selectNumber.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                buttonDelete.setVisibility(View.VISIBLE);
-//            }
-//        });
-
-        selectNumber.setOnFocusChangeListener(new android.view.View.
-                OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    buttonDelete.setVisibility(View.VISIBLE);
-                } else {
-                    buttonDelete.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-
         Button search = view.findViewById(R.id.button_search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 定义焦点视图
-                View focuse = null;
-                // 定义校验布尔值
-                boolean cancel = false;
-
                 selectNumber.setError(null);
+
+                String number = selectNumber.getText().toString();
+                String[] numbers = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+                for(int i = 0; i<numbers.length; i++){
+                    number = "" + number.replace(numbers[i], "");
+                    System.out.println(number);
+                }
+                System.out.println("22222222222222222222222222222222222");
+                System.out.println(number);
+                System.out.println(number.length());
+                if(number.length() != 0){
+                    selectNumber.setError("快递单号要求是数字");
+                    focuse = selectNumber;
+                    cancel = true;
+                }
 
                 // 查询信息 校验
                 if(TextUtils.isEmpty(selectNumber.getText())){
@@ -314,7 +337,7 @@ public class SearchFragment extends Fragment {
                 .setSubmitText("确定")//确认按钮文字
                 .setSubmitColor(getResources().getColor(R.color.pickerview_submit_text_color))//确定按钮文字颜色
                 .setContentTextSize(20)//滚轮文字大小
-                .setTextColorCenter(getResources().getColor(R.color.pickerview_center_text_color))//设置选中文本的颜色值
+                .setTextColorCenter(getResources().getColor(R.color.black))//设置选中文本的颜色值
                 .setLineSpacingMultiplier(1.8f)//行间距
                 .setDividerColor(getResources().getColor(R.color.pickerview_divider_color))//设置分割线的颜色
                 .setSelectOptions(0)//设置选择的值
