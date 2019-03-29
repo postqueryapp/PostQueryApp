@@ -41,6 +41,7 @@ import com.app.postqueryapp.progressBar.MProgressView;
 
 import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -74,6 +75,16 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
     // 是否记住账户、密码
     private CheckBox checkBoxAccount = null;
     private CheckBox checkBoxPassword = null;
+
+    private ProgressDialog dialog = null;
+
+    private int outProgress = 0;
+
+    private Date startTime = null;
+
+    private Date endTime = null;
+
+    private boolean loginCancle = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +152,32 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             }
         });
 
+        dialog = new ProgressDialog(LoginActivity.this);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
+        dialog.setCancelable(true);// 设置是否可以通过点击Back键取消
+        dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
+        // 设置提示的title的图标，默认是没有的，如果没有设置title的话只设置Icon是不会显示图标的
+        dialog.setTitle("登陆中");
+        dialog.setMessage("请稍后......");
+        // 监听cancel事件
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                System.out.println("取消1111111111111111111111111111111111");
+                loginCancle = true;
+            }
+        });
+
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+                new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogg, int which) {
+                System.out.println("取消2222222222222222222222222222222222");
+                loginCancle = true;
+            }
+        });
 
         /**
          * 登录按钮事件，主要是从sqlLite数据库取出所注册的所有的account信息，检测是否匹配
@@ -199,16 +236,9 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                             editor.apply();
                         }
 
-                        final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
-                        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);// 设置进度条的形式为圆形转动的进度条
-                        dialog.setCancelable(false);// 设置是否可以通过点击Back键取消
-                        dialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
-                        // 设置提示的title的图标，默认是没有的，如果没有设置title的话只设置Icon是不会显示图标的
-                        dialog.setTitle("登陆中");
-                        dialog.setMessage("请稍后......");
+
                         InputMethodManager inputMethodManager = (InputMethodManager) LoginActivity.this.getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(mEmailSignInButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                        dialog.show();
                         attemptLogin();
                     }
                 }catch (Exception e){
@@ -388,7 +418,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 //            showProgress(true);
-
+            dialog.show();
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
@@ -514,7 +544,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 return false;
             }
@@ -535,12 +565,20 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
-            if (success) {
-
+            if(loginCancle){
+                System.out.println("取消3333333333333333333333333333333");
+                loginCancle = false;
+            } else if (success) {
 //                 显式活动
                 Intent intent = new Intent(LoginActivity.this, MainActivitySecond.class);
                 startActivity(intent);
-            } else {
+            }
+//            else if(success && loginCancle){
+//                System.out.println("取消3333333333333333333333333333333");
+//                loginCancle = false;
+//            }
+            else{
+                System.out.println("取消444444444444444444444444444444444");
                 mPasswordView.setError(getString(R.string.error_incorrect_login));
                 mPasswordView.requestFocus();
             }
@@ -550,6 +588,39 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         protected void onCancelled() {
             mAuthTask = null;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == event.KEYCODE_BACK){
+            outProgress++;
+            if(startTime != null && outProgress == 2){
+                endTime = new Date();
+                if(endTime.getTime() - startTime.getTime() < 1500){
+                    ActivityController.finishAll();
+                }
+                else{
+                    outProgress = 1;
+                    startTime = null;
+                    endTime = null;
+                }
+            }
+            if(outProgress == 1){
+                Toast.makeText(LoginActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                startTime = new Date();
+            }
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    return true;
+
+                case KeyEvent.KEYCODE_MENU:
+                    return true;
+
+                default:
+                    break;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

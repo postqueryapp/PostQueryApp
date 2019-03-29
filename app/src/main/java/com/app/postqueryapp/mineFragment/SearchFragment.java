@@ -88,7 +88,7 @@ public class SearchFragment extends Fragment {
                     outProgress++;
                     if(startTime != null && outProgress == 2){
                         endTime = new Date();
-                        if(endTime.getTime() - startTime.getTime() < 3000){
+                        if(endTime.getTime() - startTime.getTime() < 1500){
                             ActivityController.finishAll();
                         }
                         else{
@@ -332,7 +332,6 @@ public class SearchFragment extends Fragment {
                 String tx = mHobbyNameList.get(options1);
                 hobbyTv.setText(tx);
                 selectCode = mHobbyList.get(options1).getParaValue();
-                Toast.makeText(searchView.getContext(), selectCode, Toast.LENGTH_SHORT).show();
             }
         })
 //                .setDecorView((RelativeLayout)searchView.findViewById(R.id.search_layout))//必须是RelativeLayout，不设置setDecorView的话，底部虚拟导航栏会显示在弹出的选择器区域

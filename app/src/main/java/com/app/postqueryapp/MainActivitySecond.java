@@ -188,7 +188,7 @@ public class MainActivitySecond extends BaseActivity implements View.OnClickList
             outProgress++;
             if(startTime != null && outProgress == 2){
                 endTime = new Date();
-                if(endTime.getTime() - startTime.getTime() < 3000){
+                if(endTime.getTime() - startTime.getTime() < 1500){
                     ActivityController.finishAll();
                 }
                 else{
