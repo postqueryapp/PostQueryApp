@@ -86,6 +86,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
     private boolean loginCancle = false;
 
+    private boolean into = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,20 +166,24 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
             @Override
             public void onCancel(DialogInterface dialog) {
-                System.out.println("取消1111111111111111111111111111111111");
-                loginCancle = true;
+                if(into){
+                    into = false;
+                }
+                else{
+                    loginCancle = true;
+                }
             }
         });
 
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
-                new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialogg, int which) {
-                System.out.println("取消2222222222222222222222222222222222");
-                loginCancle = true;
-            }
-        });
+//        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消",
+//                new DialogInterface.OnClickListener() {
+//
+//            @Override
+//            public void onClick(DialogInterface dialogg, int which) {
+//                System.out.println("取消2222222222222222222222222222222222");
+//                loginCancle = true;
+//            }
+//        });
 
         /**
          * 登录按钮事件，主要是从sqlLite数据库取出所注册的所有的account信息，检测是否匹配
@@ -211,32 +217,6 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                         for(int index = 0; index<accountList.size(); index++){
                             DUMMY_CREDENTIALS[index] = accountList.get(index).getAuthor() + ":" + accountList.get(index).getPassWord();
                         }
-                        if(checkBoxAccount.isChecked()){
-                            System.out.println("正在保存账号");
-                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
-                            editor.putString("MemoryAccount", mEmailView.getText().toString());
-                            editor.putBoolean("isMemoryAccount", checkBoxAccount.isChecked());
-                            editor.apply();
-                        } else{
-                            System.out.println("正在取消保存账号");
-                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
-                            editor.putBoolean("isMemoryAccount", checkBoxAccount.isChecked());
-                            editor.apply();
-                        }
-                        if(checkBoxPassword.isChecked()){
-                            System.out.println("正在保存密码");
-                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
-                            editor.putString("MemoryPassword", mPasswordView.getText().toString());
-                            editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
-                            editor.apply();
-                        } else{
-                            System.out.println("正在取消保存密码");
-                            SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
-                            editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
-                            editor.apply();
-                        }
-
-
                         InputMethodManager inputMethodManager = (InputMethodManager) LoginActivity.this.getSystemService(LoginActivity.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(mEmailSignInButton.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                         attemptLogin();
@@ -564,24 +544,59 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-
-            if(loginCancle){
-                System.out.println("取消3333333333333333333333333333333");
-                loginCancle = false;
-            } else if (success) {
+            try{
+                if(loginCancle){
+                    into = true;
+                    dialog.cancel();
+                    loginCancle = false;
+                    System.out.println("赋予了");
+                    System.out.println(loginCancle);
+                }
+                else if (success) {
+                    loginCancle = false;
+                    if(checkBoxAccount.isChecked()){
+                        System.out.println("正在保存账号");
+                        SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                        editor.putString("MemoryAccount", mEmailView.getText().toString());
+                        editor.putBoolean("isMemoryAccount", checkBoxAccount.isChecked());
+                        editor.apply();
+                    } else{
+                        System.out.println("正在取消保存账号");
+                        SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                        editor.putBoolean("isMemoryAccount", checkBoxAccount.isChecked());
+                        editor.apply();
+                    }
+                    if(checkBoxPassword.isChecked()){
+                        System.out.println("正在保存密码");
+                        SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                        editor.putString("MemoryPassword", mPasswordView.getText().toString());
+                        editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
+                        editor.apply();
+                    } else{
+                        System.out.println("正在取消保存密码");
+                        SharedPreferences.Editor editor = getSharedPreferences("Memory", MODE_PRIVATE).edit();
+                        editor.putBoolean("isMemoryPassword", checkBoxPassword.isChecked());
+                        editor.apply();
+                    }
 //                 显式活动
-                Intent intent = new Intent(LoginActivity.this, MainActivitySecond.class);
-                startActivity(intent);
-            }
+                    Intent intent = new Intent(LoginActivity.this, MainActivitySecond.class);
+                    startActivity(intent);
+                }
 //            else if(success && loginCancle){
 //                System.out.println("取消3333333333333333333333333333333");
 //                loginCancle = false;
 //            }
-            else{
-                System.out.println("取消444444444444444444444444444444444");
-                mPasswordView.setError(getString(R.string.error_incorrect_login));
-                mPasswordView.requestFocus();
+                else {
+                    into = true;
+                    dialog.cancel();
+                    loginCancle = false;
+                    mPasswordView.setError(getString(R.string.error_incorrect_login));
+                    mPasswordView.requestFocus();
+                }
+            }catch (Exception e){
+                System.out.println("登录出错");
             }
+
         }
 
         @Override
